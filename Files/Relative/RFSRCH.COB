@@ -1,0 +1,50 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. FILES.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER.
+       OBJECT-COMPUTER.
+       FILE-CONTROL.
+           SELECT STUDENT ASSIGN TO DISK
+           ORGANIZATION IS RELATIVE
+           ACCESS MODE IS RANDOM
+           RELATIVE KEY IS REL-KEY.
+       DATA DIVISION.
+       FILE SECTION.
+       FD STUDENT
+           LABEL RECORDS ARE STANDARD
+           VALUE OF FILE-ID "EMP.DAT"
+           DATA RECORD IS STUDENT-REC.
+       01 STUDENT-REC.
+        02 RNO PIC 9(3).
+        02 NAME PIC A(20).
+        02 MARKS PIC 9(4).
+       WORKING-STORAGE SECTION.
+       77 REL-KEY PIC 9(4).
+       77 CHOICE PIC X.
+       77 FLAG PIC 9.
+
+       PROCEDURE DIVISION.
+       OPEN-PARA.
+           OPEN INPUT STUDENT.
+       ASK-PARA.
+           MOVE 0 TO FLAG.
+           DISPLAY "ENTER THE ROLL NO TO BE SEARCHED: ".
+           ACCEPT REL-KEY.
+       READ-PARA.
+           READ STUDENT INVALID KEY PERFORM NOT-FOUND-PARA.
+           IF FLAG IS NOT EQUAL TO 1
+                DISPLAY "ROLL NO: ", RNO
+                DISPLAY "NAME: ", NAME
+                DISPLAY "MARKS: ", MARKS.
+       NEXT-RECORD-PARA.
+           DISPLAY "DO YOU WANT TO SEARCH ANOTHER ROLL NO? (Y/N): ".
+           ACCEPT CHOICE.
+           IF CHOICE = "Y"
+                GO TO ASK-PARA.
+       CLOSE-PARA.
+           CLOSE STUDENT.
+           STOP RUN.
+       NOT-FOUND-PARA.
+           DISPLAY "RECORD NOT FOUND".
+           MOVE 1 TO FLAG.
